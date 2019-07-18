@@ -22,7 +22,7 @@ public:
 
     lua_State *getScriptContext();
 
-    bool startScript(const char *luaString);
+    bool startScript(const char *luaString, const char *functionName);
 
     bool isScriptRunning();
 
@@ -33,9 +33,14 @@ private:
     bool scriptRunning;
 
     bool registerCFunction();
+
+    bool loadBuff(const char* buff);
+
+    bool runLuaFunction(const char* functionName);
 };
 
 void quitLuaThread(lua_State *L);
-void quitLuaThreadHooker(lua_State* L, lua_Debug* ar);
+
+void quitLuaThreadHooker(lua_State *L, lua_Debug *ar);
 
 #endif //ANDROIDLUA_LUAENGINE_H

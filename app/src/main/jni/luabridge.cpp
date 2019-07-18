@@ -7,7 +7,7 @@ bool startScript(JNIEnv *env, jobject obj, jstring luaStr) {
     }
     mLuaEngine = new LuaEngine();
     const char *luaString = env->GetStringUTFChars(luaStr, nullptr);
-    mLuaEngine->startScript(luaString);
+    mLuaEngine->startScript(luaString, "main");
     //env->ReleaseStringUTFChars(luaStr, luaString);
     return true;
 }
