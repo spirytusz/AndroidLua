@@ -2,31 +2,31 @@
 #include "luabridge.h"
 
 bool startScript(JNIEnv *env, jobject obj, jstring luaStr) {
-    if (mLuaEngine && mLuaEngine->isScriptRunning()) {
-        Log_d(LOG_TAG, "script isRunning!");
+    if(mLuaTask) {
+        Log_d(LOG_TAG, "script is running!");
         return false;
     }
-    if (mLuaEngine) {
-        delete mLuaEngine;
-    }
-    mLuaEngine = new LuaEngine();
+
     const char *luaString = env->GetStringUTFChars(luaStr, nullptr);
-    mLuaEngine->startScript(luaString, "main");
+    mLuaTask = new LuaTask(luaString);
+    mLuaTask->startWork();
     env->ReleaseStringUTFChars(luaStr, luaString);
     return true;
 }
 
 bool stopScript(JNIEnv *env, jobject obj) {
-    if (mLuaEngine) {
-        return mLuaEngine->stopScript();
+    if(mLuaTask) {
+        mLuaTask->stopWork();
+        delete mLuaTask;
+        return true;
     } else {
         return false;
     }
 }
 
 bool isScriptRunning(JNIEnv *env, jobject obj) {
-    if (mLuaEngine) {
-        return mLuaEngine->isScriptRunning();
+    if (mLuaTask) {
+        return mLuaTask->isRunning();
     } else {
         return false;
     }

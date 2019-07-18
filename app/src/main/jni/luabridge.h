@@ -9,9 +9,9 @@
 #include <string>
 #include "android/log.h"
 
-#include "LuaEngine.h"
+#include "LuaTask.h"
 
-LuaEngine* mLuaEngine;
+LuaTask *mLuaTask;
 
 bool startScript(JNIEnv *env, jobject obj, jstring luaStr);
 
