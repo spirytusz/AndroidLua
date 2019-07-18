@@ -5,9 +5,13 @@
 #ifndef ANDROIDLUABRIDGE_LUABRIDGE_H
 #define ANDROIDLUABRIDGE_LUABRIDGE_H
 
-#define LOG_TAG "LUA_BRIDGE"
-
 #include <jni.h>
+#include <string>
+#include "android/log.h"
+
+#include "LuaEngine.h"
+
+LuaEngine* mLuaEngine;
 
 bool startScript(JNIEnv *env, jobject obj, jstring luaStr);
 

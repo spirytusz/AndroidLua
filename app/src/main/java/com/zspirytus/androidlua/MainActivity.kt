@@ -43,10 +43,10 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 start_btn.setOnClickListener {
-                    Log.d(TAG, "startScript: ${startScript(readScript())} isScriptRunning: ${isScriptRunning()}")
+                    Thread(Runnable { Log.d(TAG, "startScript: ${startScript(readScript())} isScriptRunning: ${isScriptRunning()}") }).start()
                 }
                 stop_btn.setOnClickListener {
-                    Log.d(TAG, "stopScript: ${stopScript()} isScriptRunning: ${isScriptRunning()}")
+                    Thread(Runnable { Log.d(TAG, "stopScript: ${stopScript()} isScriptRunning: ${isScriptRunning()}") }).start()
                 }
             }
         }
