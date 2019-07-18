@@ -11,14 +11,20 @@ LuaEngine::LuaEngine() {
 }
 
 LuaEngine::~LuaEngine() {
+    if (isScriptRunning()) {
+        stopScript();
+    }
     mScriptContext = nullptr;
 }
 
 bool LuaEngine::startScript(const char *luaString, const char *functionName) {
+    scriptRunning = true;
     luaL_openlibs(mScriptContext);
     this->registerCFunction();
     if (this->loadBuff(luaString)) {
-        return this->runLuaFunction(functionName);
+        bool success = this->runLuaFunction(functionName);
+        scriptRunning = false;
+        return success;
     } else {
         return false;
     }
@@ -26,6 +32,7 @@ bool LuaEngine::startScript(const char *luaString, const char *functionName) {
 
 bool LuaEngine::stopScript() {
     quitLuaThread(mScriptContext);
+    scriptRunning = false;
     return true;
 }
 

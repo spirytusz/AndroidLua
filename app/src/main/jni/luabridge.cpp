@@ -2,13 +2,17 @@
 #include "luabridge.h"
 
 bool startScript(JNIEnv *env, jobject obj, jstring luaStr) {
+    if (mLuaEngine && mLuaEngine->isScriptRunning()) {
+        Log_d(LOG_TAG, "script isRunning!");
+        return false;
+    }
     if (mLuaEngine) {
         delete mLuaEngine;
     }
     mLuaEngine = new LuaEngine();
     const char *luaString = env->GetStringUTFChars(luaStr, nullptr);
     mLuaEngine->startScript(luaString, "main");
-    //env->ReleaseStringUTFChars(luaStr, luaString);
+    env->ReleaseStringUTFChars(luaStr, luaString);
     return true;
 }
 
