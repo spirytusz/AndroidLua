@@ -36,20 +36,12 @@ bool LuaEngine::stopScript() {
     return true;
 }
 
-bool LuaEngine::isScriptRunning() {
-    return scriptRunning;
-}
-
 bool LuaEngine::registerCFunction() {
     int len = sizeof(mCFunctions) / sizeof(CFunction);
     for (int i = 0; i < len; i++) {
         lua_register(mScriptContext, mCFunctions[i].name, mCFunctions[i].func);
     }
     return true;
-}
-
-lua_State *LuaEngine::getScriptContext() {
-    return mScriptContext;
 }
 
 bool LuaEngine::loadBuff(const char *buff) {

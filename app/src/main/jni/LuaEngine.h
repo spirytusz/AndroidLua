@@ -20,11 +20,15 @@ public:
 
     virtual ~LuaEngine();
 
-    lua_State *getScriptContext();
+    lua_State *getScriptContext() {
+        return mScriptContext;
+    }
 
     bool startScript(const char *luaString, const char *functionName);
 
-    bool isScriptRunning();
+    bool isScriptRunning() {
+        return scriptRunning;
+    }
 
     bool stopScript();
 
