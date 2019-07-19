@@ -4,6 +4,7 @@
 
 #include "LuaEngine.h"
 #include "utils/Log.h"
+#include "JniManager.h"
 
 LuaEngine::LuaEngine() {
     mScriptContext = luaL_newstate();
@@ -17,23 +18,29 @@ LuaEngine::~LuaEngine() {
     mScriptContext = nullptr;
 }
 
-bool LuaEngine::startScript(const char *luaString, const char *functionName) {
+bool LuaEngine::startScript(const char* buff, const char *functionName) {
     scriptRunning = true;
     luaL_openlibs(mScriptContext);
     this->registerCFunction();
-    if (this->loadBuff(luaString)) {
+    if (this->loadBuff(buff)) {
         bool success = this->runLuaFunction(functionName);
         scriptRunning = false;
         return success;
     } else {
+        scriptRunning = false;
         return false;
     }
 }
 
 bool LuaEngine::stopScript() {
-    quitLuaThread(mScriptContext);
-    scriptRunning = false;
-    return true;
+    if(scriptRunning) {
+        quitLuaThread(mScriptContext);
+        scriptRunning = false;
+        return true;
+    } else {
+        Log_d(LOG_TAG, "script is Not running");
+        return false;
+    }
 }
 
 bool LuaEngine::registerCFunction() {
@@ -44,7 +51,7 @@ bool LuaEngine::registerCFunction() {
     return true;
 }
 
-bool LuaEngine::loadBuff(const char *buff) {
+bool LuaEngine::loadBuff(const char* buff) {
     // 读取buff
     if (LUA_OK != luaL_loadbuffer(mScriptContext, buff, strlen(buff), NULL)) {
         const char *szError = luaL_checkstring(mScriptContext, -1);

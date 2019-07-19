@@ -7,6 +7,7 @@
 
 #include <cstring>
 #include <string>
+#include <jni.h>
 #include "lua/lua.hpp"
 #include "android/log.h"
 
@@ -24,7 +25,7 @@ public:
         return mScriptContext;
     }
 
-    bool startScript(const char *luaString, const char *functionName);
+    bool startScript(const char *buff, const char *functionName);
 
     bool isScriptRunning() {
         return scriptRunning;
@@ -38,9 +39,9 @@ private:
 
     bool registerCFunction();
 
-    bool loadBuff(const char* buff);
+    bool loadBuff(const char *buff);
 
-    bool runLuaFunction(const char* functionName);
+    bool runLuaFunction(const char *functionName);
 };
 
 void quitLuaThread(lua_State *L);
