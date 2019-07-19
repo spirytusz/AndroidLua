@@ -16,7 +16,7 @@ LuaTask::~LuaTask() {
 }
 
 void LuaTask::startWork() {
-    pthread_create(&mThreadId, NULL, LuaTask::startWorkInner, NULL);
+    pthread_create(&mThreadId, NULL, (void *(*)(void *))&LuaTask::startWorkInner, this);
 }
 
 void LuaTask::stopWork() {
@@ -24,8 +24,8 @@ void LuaTask::stopWork() {
     mThreadId = 0;
 }
 
-void* LuaTask::startWorkInner(void *arg) {
-    mLuaEngine->startScript(mLuaBuff, "main");
+void* LuaTask::startWorkInner(LuaTask *task) {
+    task->mLuaEngine->startScript(task->mLuaBuff, "main");
     return nullptr;
 }
 

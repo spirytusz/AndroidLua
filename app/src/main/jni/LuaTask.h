@@ -24,7 +24,7 @@ public:
     bool isRunning();
 
 private:
-    static void *startWorkInner(void *arg);
+    static void *startWorkInner(LuaTask *task);
 
 private:
     const char *mLuaBuff;
