@@ -14,7 +14,7 @@
 class LuaTask {
 
 public:
-    LuaTask(const char* luaBuff);
+    LuaTask(jstring jBuff);
 
     virtual ~LuaTask();
 
@@ -28,7 +28,7 @@ private:
     static void *startWorkInner(void *args);
 
 private:
-    const char* mLuaBuff;
+    jstring mLuaBuff;
     pthread_t mThreadId;
     LuaEngine *mLuaEngine;
 };

@@ -5,8 +5,8 @@
 #include "LuaTask.h"
 #include "JniManager.h"
 
-LuaTask::LuaTask(const char* luaBuff) {
-    mLuaBuff = luaBuff;
+LuaTask::LuaTask(jstring jBuff) {
+    mLuaBuff = jBuff;
     mLuaEngine = new LuaEngine();
     mThreadId = 0;
 }

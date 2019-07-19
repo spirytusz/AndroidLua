@@ -18,11 +18,11 @@ LuaEngine::~LuaEngine() {
     mScriptContext = nullptr;
 }
 
-bool LuaEngine::startScript(const char* buff, const char *functionName) {
+bool LuaEngine::startScript(jstring jBuff, const char *functionName) {
     scriptRunning = true;
     luaL_openlibs(mScriptContext);
     this->registerCFunction();
-    if (this->loadBuff(buff)) {
+    if (this->loadBuff(jBuff)) {
         bool success = this->runLuaFunction(functionName);
         scriptRunning = false;
         return success;
@@ -33,7 +33,7 @@ bool LuaEngine::startScript(const char* buff, const char *functionName) {
 }
 
 bool LuaEngine::stopScript() {
-    if(scriptRunning) {
+    if (scriptRunning) {
         quitLuaThread(mScriptContext);
         scriptRunning = false;
         return true;
@@ -51,9 +51,12 @@ bool LuaEngine::registerCFunction() {
     return true;
 }
 
-bool LuaEngine::loadBuff(const char* buff) {
+bool LuaEngine::loadBuff(jstring jBuff) {
     // 读取buff
-    if (LUA_OK != luaL_loadbuffer(mScriptContext, buff, strlen(buff), NULL)) {
+    JNIEnv *env;
+    JniManager::getInstance()->getJvm()->GetEnv((void **) &env, JNI_VERSION_1_6);
+    const char *cBuff = env->GetStringUTFChars(jBuff, nullptr);
+    if (LUA_OK != luaL_loadbuffer(mScriptContext, cBuff, strlen(cBuff), NULL)) {
         const char *szError = luaL_checkstring(mScriptContext, -1);
         Log_e(LOG_TAG, "%s", szError);
         return false;
@@ -64,6 +67,8 @@ bool LuaEngine::loadBuff(const char* buff) {
         Log_e(LOG_TAG, "%s", szError);
         return false;
     }
+    env->ReleaseStringUTFChars(jBuff, cBuff);
+    env->DeleteGlobalRef(jBuff);
     return true;
 }
 

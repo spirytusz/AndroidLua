@@ -7,8 +7,8 @@ bool startScript(JNIEnv *env, jobject obj, jstring luaStr) {
         Log_d(LOG_TAG, "script is running!");
         return false;
     }
-    const char* luaBuff = env->GetStringUTFChars(luaStr, nullptr);
-    mLuaTask = new LuaTask(luaBuff);
+    jstring g_jBuff = (jstring)env->NewGlobalRef(luaStr);
+    mLuaTask = new LuaTask(g_jBuff);
     mLuaTask->startWork();
     return true;
 }

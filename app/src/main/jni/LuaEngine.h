@@ -25,7 +25,7 @@ public:
         return mScriptContext;
     }
 
-    bool startScript(const char *buff, const char *functionName);
+    bool startScript(jstring jBuff, const char *functionName);
 
     bool isScriptRunning() {
         return scriptRunning;
@@ -39,7 +39,7 @@ private:
 
     bool registerCFunction();
 
-    bool loadBuff(const char *buff);
+    bool loadBuff(jstring jBuff);
 
     bool runLuaFunction(const char *functionName);
 };
