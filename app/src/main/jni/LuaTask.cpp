@@ -3,20 +3,20 @@
 //
 
 #include "LuaTask.h"
+#include "JniManager.h"
 
-LuaTask::LuaTask(const char *buff) {
-    mLuaBuff = buff;
+LuaTask::LuaTask(const char* luaBuff) {
+    mLuaBuff = luaBuff;
     mLuaEngine = new LuaEngine();
     mThreadId = 0;
 }
 
 LuaTask::~LuaTask() {
     delete mLuaEngine;
-    delete mLuaBuff;
 }
 
 void LuaTask::startWork() {
-    pthread_create(&mThreadId, NULL, (void *(*)(void *))&LuaTask::startWorkInner, this);
+    pthread_create(&mThreadId, NULL, &LuaTask::startWorkInner, (void*)this);
 }
 
 void LuaTask::stopWork() {
@@ -24,8 +24,12 @@ void LuaTask::stopWork() {
     mThreadId = 0;
 }
 
-void* LuaTask::startWorkInner(LuaTask *task) {
+void* LuaTask::startWorkInner(void *args) {
+    LuaTask* task = (LuaTask*) args;
+    JNIEnv* env = nullptr;
+    attachCurrentThread(env);
     task->mLuaEngine->startScript(task->mLuaBuff, "main");
+    detachCurrentThread();
     return nullptr;
 }
 

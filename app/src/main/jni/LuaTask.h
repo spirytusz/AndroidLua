@@ -7,13 +7,14 @@
 
 #include <sys/types.h>
 #include <pthread.h>
+#include <jni.h>
 
 #include "LuaEngine.h"
 
 class LuaTask {
 
 public:
-    LuaTask(const char *buff);
+    LuaTask(const char* luaBuff);
 
     virtual ~LuaTask();
 
@@ -24,10 +25,10 @@ public:
     bool isRunning();
 
 private:
-    static void *startWorkInner(LuaTask *task);
+    static void *startWorkInner(void *args);
 
 private:
-    const char *mLuaBuff;
+    const char* mLuaBuff;
     pthread_t mThreadId;
     LuaEngine *mLuaEngine;
 };

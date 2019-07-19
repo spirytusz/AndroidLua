@@ -1,25 +1,27 @@
 
 #include "luabridge.h"
+#include "JniManager.h"
 
 bool startScript(JNIEnv *env, jobject obj, jstring luaStr) {
     if(mLuaTask) {
         Log_d(LOG_TAG, "script is running!");
         return false;
     }
-
-    const char *luaString = env->GetStringUTFChars(luaStr, nullptr);
-    mLuaTask = new LuaTask(luaString);
+    const char* luaBuff = env->GetStringUTFChars(luaStr, nullptr);
+    mLuaTask = new LuaTask(luaBuff);
     mLuaTask->startWork();
-    env->ReleaseStringUTFChars(luaStr, luaString);
     return true;
 }
 
 bool stopScript(JNIEnv *env, jobject obj) {
     if(mLuaTask) {
+        Log_d(LOG_TAG, "running!!");
         mLuaTask->stopWork();
         delete mLuaTask;
+        mLuaTask = nullptr;
         return true;
     } else {
+        Log_d(LOG_TAG, "NOT running!!");
         return false;
     }
 }
@@ -38,6 +40,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
         return -1;
     }
     assert(env != NULL);
+    JniManager::getInstance()->initJniManager(vm, env);
     if (!registerNativeMethods(env, "com/zspirytus/androidlua/MainActivity", nativeMethods,
                                sizeof(nativeMethods) / sizeof(nativeMethods[0]))) {
         return -1;
