@@ -7,7 +7,10 @@
 
 #include <zconf.h>
 #include "lua/lua.hpp"
+
 #include "utils/Log.h"
+#include "JniManager.h"
+#include "LuaEngine.h"
 
 typedef struct {
     const char *name;
@@ -20,10 +23,13 @@ int sleepMilliseconds(lua_State *L);
 
 int sleepSeconds(lua_State *L);
 
+int getString(lua_State *L);
+
 static CFunction mCFunctions[] = {
         {"CPrintMsg",         CPrintMsg},
         {"sleepMilliseconds", sleepMilliseconds},
-        {"sleepSeconds",      sleepSeconds}
+        {"sleepSeconds",      sleepSeconds},
+        {"getString",         getString}
 };
 
 #endif //ANDROIDLUA_SHELL_H

@@ -27,9 +27,9 @@ void LuaTask::stopWork() {
 void* LuaTask::startWorkInner(void *args) {
     LuaTask* task = (LuaTask*) args;
     JNIEnv* env = nullptr;
-    attachCurrentThread(env);
+    JniManager::getInstance()->attachCurrentThread(env);
     task->mLuaEngine->startScript(task->mLuaBuff, "main");
-    detachCurrentThread();
+    JniManager::getInstance()->detachCurrentThread();
     return nullptr;
 }
 

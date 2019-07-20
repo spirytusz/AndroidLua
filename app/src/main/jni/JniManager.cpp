@@ -4,7 +4,7 @@
 
 #include "JniManager.h"
 
-JniManager* JniManager::instance = nullptr;
+JniManager *JniManager::instance = nullptr;
 
 JniManager *JniManager::getInstance() {
     if (!instance) {
@@ -15,12 +15,24 @@ JniManager *JniManager::getInstance() {
 
 void JniManager::initJniManager(JavaVM *jvm, JNIEnv *env) {
     mPJvm = jvm;
+    inRefJavaClass(env);
 }
 
-void attachCurrentThread(JNIEnv *env) {
+void JniManager::inRefJavaClass(JNIEnv *env) {
+    for (char *className : classes) {
+        jclass g_jClass = env->FindClass(className);
+        if (!g_jClass) {
+            Log_d(LOG_TAG, "Class %s Not Found", className);
+            continue;
+        }
+        classMapper[className] = (jclass) env->NewGlobalRef(g_jClass);
+    }
+}
+
+void JniManager::attachCurrentThread(JNIEnv *env) {
     JavaVM *jvm = JniManager::getInstance()->getJvm();
     int status = jvm->GetEnv((void **) &env, JNI_VERSION_1_6);
-    if(JNI_OK == status) {
+    if (JNI_OK == status) {
         // 已经attach过了
         return;
     }
@@ -28,7 +40,7 @@ void attachCurrentThread(JNIEnv *env) {
     jvm->AttachCurrentThread(&env, &args);
 }
 
-void detachCurrentThread() {
+void JniManager::detachCurrentThread() {
     JavaVM *jvm = JniManager::getInstance()->getJvm();
     if (jvm) {
         jvm->DetachCurrentThread();

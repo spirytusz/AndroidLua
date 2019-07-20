@@ -3,8 +3,6 @@
 //
 
 #include "LuaEngine.h"
-#include "utils/Log.h"
-#include "JniManager.h"
 
 LuaEngine::LuaEngine() {
     mScriptContext = luaL_newstate();
@@ -23,6 +21,7 @@ bool LuaEngine::startScript(jstring jBuff, const char *functionName) {
     luaL_openlibs(mScriptContext);
     this->registerCFunction();
     if (this->loadBuff(jBuff)) {
+        Log_d(LOG_TAG, "script start running..");
         bool success = this->runLuaFunction(functionName);
         scriptRunning = false;
         return success;
@@ -76,6 +75,7 @@ bool LuaEngine::runLuaFunction(const char *functionName) {
     // 获取errorFunc
     lua_getglobal(mScriptContext, "__TRACKBACK__");
     if (lua_type(mScriptContext, -1) != LUA_TFUNCTION) {
+        Log_d(LOG_TAG, "can not found errorFunc : __TRACKBACK__");
         return false;
     }
     int errfunc = lua_gettop(mScriptContext);
@@ -83,6 +83,7 @@ bool LuaEngine::runLuaFunction(const char *functionName) {
     // 获取指定的方法
     lua_getglobal(mScriptContext, functionName);
     if (lua_type(mScriptContext, -1) != LUA_TFUNCTION) {
+        Log_d(LOG_TAG, "can not found func : %s", functionName);
         return false;
     }
 

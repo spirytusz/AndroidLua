@@ -15,8 +15,28 @@ int sleepMilliseconds(lua_State *L) {
 
 int sleepSeconds(lua_State *L) {
     int second = static_cast<int>(lua_tointeger(L, 1));
-    for(int i = 0;i<second;i++) {
+    for (int i = 0; i < second; i++) {
         sleep(1);
     }
     return 0;
+}
+
+int getString(lua_State *L) {
+    JNIEnv *env;
+    JniManager::getInstance()->getJvm()->GetEnv((void **) &env, JNI_VERSION_1_6);
+    jclass clazz = JniManager::getInstance()->getInRefClass("com/zspirytus/androidlua/ShellBridge");
+    if (!clazz) {
+        Log_d(LOG_TAG, "class not found!");
+        return 0;
+    }
+    jmethodID methodId = env->GetStaticMethodID(clazz, "getStringFromStaticJavaMethod",
+                                                "()Ljava/lang/String;");
+    if (!methodId) {
+        Log_d(LOG_TAG, "method %s not found!", "getStringFromStaticJavaMethod");
+        return 0;
+    }
+    jstring jStr = (jstring) env->CallStaticObjectMethod(clazz, methodId);
+    const char *cStr = env->GetStringUTFChars(jStr, NULL);
+    lua_pushstring(L, cStr);
+    return 1;
 }

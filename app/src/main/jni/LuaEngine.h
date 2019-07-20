@@ -9,7 +9,9 @@
 #include <string>
 #include <jni.h>
 #include "lua/lua.hpp"
-#include "android/log.h"
+
+#include "utils/Log.h"
+#include "JniManager.h"
 
 #include "shell.h"
 

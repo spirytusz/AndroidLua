@@ -6,6 +6,11 @@
 #define ANDROIDLUA_JNIMANAGER_H
 
 #include <jni.h>
+#include <string>
+#include <map>
+#include "list"
+#include "utils/Log.h"
+#include "LuaEngine.h"
 
 class JniManager {
 
@@ -21,12 +26,38 @@ public:
         return mPJvm;
     }
 
+    void attachCurrentThread(JNIEnv *env);
+
+    void detachCurrentThread();
+
+    jclass getInRefClass(char *className) {
+        auto it = classMapper.find(className);
+        if (it != classMapper.end()) {
+            return it->second;
+        } else {
+            return NULL;
+        }
+    }
+
 private:
     JavaVM *mPJvm;
+    std::map<std::string, jclass> classMapper;
+    std::list<char *> classes;
+
+    void inRefJavaClass(JNIEnv *env);
+
+    JniManager() {
+        classes.push_back("com/zspirytus/androidlua/ShellBridge");
+    }
+
+    ~JniManager() {
+        JNIEnv *env;
+        mPJvm->GetEnv((void **) &env, JNI_VERSION_1_6);
+        for (char *className: classes) {
+            env->DeleteGlobalRef(classMapper[className]);
+        }
+        delete mPJvm;
+    };
 };
-
-void attachCurrentThread(JNIEnv *env);
-
-void detachCurrentThread();
 
 #endif //ANDROIDLUA_JNIMANAGER_H
