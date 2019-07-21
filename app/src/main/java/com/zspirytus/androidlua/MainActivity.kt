@@ -1,10 +1,10 @@
 package com.zspirytus.androidlua
 
 import android.content.pm.PackageManager
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.support.v4.app.ActivityCompat
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
@@ -43,25 +43,17 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 start_btn.setOnClickListener {
-                    Log.d(TAG, "startScript: ${startScript(readScript())} isScriptRunning: ${isScriptRunning()}")
+                    Log.d(TAG, "startScript: ${LuaExecutor.startScript(readScript())} isScriptRunning: ${LuaExecutor.isScriptRunning()}")
                 }
                 stop_btn.setOnClickListener {
-                    Log.d(TAG, "stopScript: ${stopScript()} isScriptRunning: ${isScriptRunning()}")
+                    Log.d(TAG, "stopScript: ${LuaExecutor.stopScript()} isScriptRunning: ${LuaExecutor.isScriptRunning()}")
                 }
             }
         }
     }
 
-    private external fun startScript(luaString: String): Boolean
-    private external fun stopScript(): Boolean
-    private external fun isScriptRunning(): Boolean
-
     companion object {
         private const val TAG = "MainActivity"
         private const val REQUEST_CODE = 233
-
-        init {
-            System.loadLibrary("luabridge")
-        }
     }
 }
