@@ -30,10 +30,12 @@ class MainActivity : AppCompatActivity() {
                 start_btn.setOnClickListener {
                     val scriptPkg = File(Environment.getExternalStorageDirectory(), "t.zip")
                     val config = "config"
-                    Log.d(TAG, "startScript: ${LuaExecutor.runScriptPkg(scriptPkg, config)} isScriptRunning: ${LuaExecutor.isScriptRunning()}")
+                    Log.d(TAG, "startScript: ${LuaExecutor.getInstance().runScriptPkg(scriptPkg, config)}" +
+                        " isScriptRunning: ${LuaExecutor.getInstance().isScriptRunning()}")
                 }
                 stop_btn.setOnClickListener {
-                    Log.d(TAG, "stopScript: ${LuaExecutor.stopScript()} isScriptRunning: ${LuaExecutor.isScriptRunning()}")
+                    Log.d(TAG, "stopScript: ${LuaExecutor.getInstance().stopScript()} " +
+                        "isScriptRunning: ${LuaExecutor.getInstance().isScriptRunning()}")
                 }
             }
         }

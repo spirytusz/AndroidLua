@@ -25,11 +25,14 @@ int sleepSeconds(lua_State *L);
 
 int getString(lua_State *L);
 
+int getData(lua_State *L);
+
 static CFunction mCFunctions[] = {
         {"CPrintMsg",         CPrintMsg},
         {"sleepMilliseconds", sleepMilliseconds},
         {"sleepSeconds",      sleepSeconds},
-        {"getString",         getString}
+        {"getString",         getString},
+        {"getData",           getData},
 };
 
 #endif //ANDROIDLUA_SHELL_H

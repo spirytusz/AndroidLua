@@ -4,9 +4,16 @@ import com.zspirytus.androidlua.utils.ZipFileUtils
 import java.io.File
 import java.util.zip.ZipFile
 
-object LuaExecutor {
+class LuaExecutor {
+
+    init {
+        System.loadLibrary("luabridge")
+    }
+
+    var scriptDataFetcher: ScriptPkgDataFetcher? = null
 
     fun runScriptPkg(scriptPkg: File, configFile: String) {
+        initScriptPkg(scriptPkg)
         val zipFile = ZipFile(scriptPkg)
         val config = ZipFileUtils.getFileContentFromZipFile(zipFile, configFile)
         val luaScriptPaths = config.split("\r\n")
@@ -18,11 +25,19 @@ object LuaExecutor {
         startScript(script)
     }
 
+    private fun initScriptPkg(scriptPkg: File) {
+        scriptDataFetcher = ScriptPkgDataFetcher(scriptPkg)
+    }
+
     private external fun startScript(luaString: String): Boolean
     external fun stopScript(): Boolean
     external fun isScriptRunning(): Boolean
 
-    init {
-        System.loadLibrary("luabridge")
+    companion object {
+        private val INSTANCE = LuaExecutor()
+
+        fun getInstance(): LuaExecutor {
+            return INSTANCE
+        }
     }
 }
