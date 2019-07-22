@@ -39,6 +39,8 @@ int getString(lua_State *L) {
     jstring jStr = (jstring) env->CallStaticObjectMethod(clazz, methodId);
     const char *cStr = env->GetStringUTFChars(jStr, NULL);
     lua_pushstring(L, cStr);
+    env->ReleaseStringUTFChars(jStr, cStr);
+    env->DeleteLocalRef(jStr);
     return 1;
 }
 
@@ -61,5 +63,8 @@ int getData(lua_State *L) {
     jbyteArray jba = (jbyteArray) env->CallStaticObjectMethod(clazz, methodId, dataPath);
     const char *cStr = (char *) (env)->GetByteArrayElements(jba, NULL);
     lua_pushstring(L, cStr);
+    env->ReleaseByteArrayElements(jba, (jbyte*) cStr, JNI_ABORT);
+    env->DeleteLocalRef(jba);
+    env->DeleteLocalRef(dataPath);
     return 1;
 }
