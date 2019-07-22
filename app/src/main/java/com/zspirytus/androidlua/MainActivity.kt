@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
-import java.io.FileInputStream
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,22 +15,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         requestPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    }
-
-    private fun readScript(): String {
-        val sb = StringBuilder()
-        val fis = FileInputStream(File(Environment.getExternalStorageDirectory(), "test.lua"))
-        var len: Int
-        val buf = ByteArray(512)
-        while (true) {
-            len = fis.read(buf)
-            if (len != -1) {
-                sb.append(String(buf, 0, len))
-            } else {
-                break
-            }
-        }
-        return sb.toString()
     }
 
     private fun requestPermission(vararg permissions: String) {
@@ -43,7 +26,9 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 start_btn.setOnClickListener {
-                    Log.d(TAG, "startScript: ${LuaExecutor.startScript(readScript())} isScriptRunning: ${LuaExecutor.isScriptRunning()}")
+                    val scriptPkg = File(Environment.getExternalStorageDirectory(), "t.zip")
+                    val config = "config"
+                    Log.d(TAG, "startScript: ${LuaExecutor.runScriptPkg(scriptPkg, config)} isScriptRunning: ${LuaExecutor.isScriptRunning()}")
                 }
                 stop_btn.setOnClickListener {
                     Log.d(TAG, "stopScript: ${LuaExecutor.stopScript()} isScriptRunning: ${LuaExecutor.isScriptRunning()}")
