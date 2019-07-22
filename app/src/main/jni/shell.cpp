@@ -29,7 +29,7 @@ int getString(lua_State *L) {
         Log_d(LOG_TAG, "class not found!");
         return 0;
     }
-    jmethodID methodId = env->GetStaticMethodID(clazz, "getStringFromStaticJavaMethod",
+    jmethodID methodId = env->GetStaticMethodID(clazz, "getStringFromKotlinLayer",
                                                 "()Ljava/lang/String;");
     if (!methodId) {
         Log_d(LOG_TAG, "method %s not found!", "getStringFromStaticJavaMethod");
