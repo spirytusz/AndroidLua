@@ -1,4 +1,4 @@
-package com.zspirytus.androidlua
+package com.zspirytus.androidlua.engine
 
 import com.zspirytus.androidlua.utils.ZipFileUtils
 import java.io.File

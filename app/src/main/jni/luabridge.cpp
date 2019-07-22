@@ -41,7 +41,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
     }
     assert(env != NULL);
     JniManager::getInstance()->initJniManager(vm, env);
-    if (!registerNativeMethods(env, "com/zspirytus/androidlua/LuaExecutor", nativeMethods,
+    if (!registerNativeMethods(env, "com/zspirytus/androidlua/engine/LuaExecutor", nativeMethods,
                                sizeof(nativeMethods) / sizeof(nativeMethods[0]))) {
         return -1;
     }

@@ -47,7 +47,7 @@ private:
     void inRefJavaClass(JNIEnv *env);
 
     JniManager() {
-        classes.push_back("com/zspirytus/androidlua/ShellBridge");
+        classes.push_back("com/zspirytus/androidlua/shell/ShellBridge");
     }
 
     ~JniManager() {

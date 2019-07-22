@@ -24,7 +24,7 @@ int sleepSeconds(lua_State *L) {
 int getString(lua_State *L) {
     JNIEnv *env;
     JniManager::getInstance()->getJvm()->GetEnv((void **) &env, JNI_VERSION_1_6);
-    jclass clazz = JniManager::getInstance()->getInRefClass("com/zspirytus/androidlua/ShellBridge");
+    jclass clazz = JniManager::getInstance()->getInRefClass("com/zspirytus/androidlua/shell/ShellBridge");
     if (!clazz) {
         Log_d(LOG_TAG, "class not found!");
         return 0;
