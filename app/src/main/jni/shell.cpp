@@ -61,7 +61,10 @@ int getData(lua_State *L) {
     }
     jstring dataPath = env->NewStringUTF(lua_tostring(L, 1));
     jbyteArray jba = (jbyteArray) env->CallStaticObjectMethod(clazz, methodId, dataPath);
-    const char *cStr = (char *) (env)->GetByteArrayElements(jba, NULL);
+    int len = env->GetArrayLength (jba);
+    char* cStr = new char[len + 1];
+    env->GetByteArrayRegion (jba, 0, len, reinterpret_cast<jbyte*>(cStr));
+    cStr[len] = '\0';
     lua_pushstring(L, cStr);
     env->ReleaseByteArrayElements(jba, (jbyte*) cStr, JNI_ABORT);
     env->DeleteLocalRef(jba);

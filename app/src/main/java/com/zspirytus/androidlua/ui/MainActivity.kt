@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 start_btn.setOnClickListener {
-                    val scriptPkg = File(Environment.getExternalStorageDirectory(), "t.zip")
+                    val scriptPkg = File(Environment.getExternalStorageDirectory(), "script.zip")
                     val config = "config"
                     Log.d(TAG, "startScript: ${LuaExecutor.getInstance().runScriptPkg(scriptPkg, config)}" +
                         " isScriptRunning: ${LuaExecutor.getInstance().isScriptRunning()}")
