@@ -29,6 +29,13 @@ void JniManager::inRefJavaClass(JNIEnv *env) {
     }
 }
 
+void JniManager::getMethodId(char* className, char* methodName, char* sig, jclass &clazz, jmethodID &methodId) {
+    clazz = classMapper[className];
+    JNIEnv* env;
+    mPJvm->GetEnv((void **) &env, JNI_VERSION_1_6);
+    methodId = env->GetStaticMethodID(clazz, methodName, sig);
+}
+
 void JniManager::attachCurrentThread(JNIEnv *env) {
     JavaVM *jvm = JniManager::getInstance()->getJvm();
     int status = jvm->GetEnv((void **) &env, JNI_VERSION_1_6);

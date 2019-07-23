@@ -26,18 +26,17 @@ public:
         return mPJvm;
     }
 
+    JNIEnv* getEnv() {
+        JNIEnv* env;
+        mPJvm->GetEnv((void**)&env, JNI_VERSION_1_6);
+        return env;
+    }
+
     void attachCurrentThread(JNIEnv *env);
 
     void detachCurrentThread();
 
-    jclass getInRefClass(char *className) {
-        auto it = classMapper.find(className);
-        if (it != classMapper.end()) {
-            return it->second;
-        } else {
-            return NULL;
-        }
-    }
+    void getMethodId(char* className, char* methodName, char* sig, jclass &clazz, jmethodID &methodId);
 
 private:
     JavaVM *mPJvm;

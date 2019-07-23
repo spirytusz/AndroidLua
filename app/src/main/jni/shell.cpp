@@ -22,16 +22,16 @@ int sleepSeconds(lua_State *L) {
 }
 
 int getString(lua_State *L) {
-    JNIEnv *env;
-    JniManager::getInstance()->getJvm()->GetEnv((void **) &env, JNI_VERSION_1_6);
-    jclass clazz = JniManager::getInstance()->getInRefClass(
-            "com/zspirytus/androidlua/shell/ShellBridge");
+    jclass clazz;
+    jmethodID methodId;
+    JNIEnv *env = JniManager::getInstance()->getEnv();
+    JniManager::getInstance()->getMethodId("com/zspirytus/androidlua/shell/ShellBridge",
+                                           "getStringFromKotlinLayer", "()Ljava/lang/String;",
+                                           clazz, methodId);
     if (!clazz) {
         Log_d(LOG_TAG, "class not found!");
         return 0;
     }
-    jmethodID methodId = env->GetStaticMethodID(clazz, "getStringFromKotlinLayer",
-                                                "()Ljava/lang/String;");
     if (!methodId) {
         Log_d(LOG_TAG, "method %s not found!", "getStringFromStaticJavaMethod");
         return 0;
@@ -45,28 +45,28 @@ int getString(lua_State *L) {
 }
 
 int getData(lua_State *L) {
-    JNIEnv *env;
-    JniManager::getInstance()->getJvm()->GetEnv((void **) &env, JNI_VERSION_1_6);
-    jclass clazz = JniManager::getInstance()->getInRefClass(
-            "com/zspirytus/androidlua/shell/ShellBridge");
+    jclass clazz;
+    jmethodID methodId;
+    JNIEnv *env = JniManager::getInstance()->getEnv();
+    JniManager::getInstance()->getMethodId("com/zspirytus/androidlua/shell/ShellBridge",
+                                           "getScriptPkgData", "(Ljava/lang/String;)[B",
+                                           clazz, methodId);
     if (!clazz) {
         Log_d(LOG_TAG, "class not found!");
         return 0;
     }
-    jmethodID methodId = env->GetStaticMethodID(clazz, "getScriptPkgData",
-                                                "(Ljava/lang/String;)[B");
     if (!methodId) {
         Log_d(LOG_TAG, "method %s not found!", "getScriptPkgData");
         return 0;
     }
     jstring dataPath = env->NewStringUTF(lua_tostring(L, 1));
     jbyteArray jba = (jbyteArray) env->CallStaticObjectMethod(clazz, methodId, dataPath);
-    int len = env->GetArrayLength (jba);
-    char* cStr = new char[len + 1];
-    env->GetByteArrayRegion (jba, 0, len, reinterpret_cast<jbyte*>(cStr));
+    int len = env->GetArrayLength(jba);
+    char *cStr = new char[len + 1];
+    env->GetByteArrayRegion(jba, 0, len, reinterpret_cast<jbyte *>(cStr));
     cStr[len] = '\0';
     lua_pushstring(L, cStr);
-    env->ReleaseByteArrayElements(jba, (jbyte*) cStr, JNI_ABORT);
+    env->ReleaseByteArrayElements(jba, (jbyte *) cStr, JNI_ABORT);
     env->DeleteLocalRef(jba);
     env->DeleteLocalRef(dataPath);
     return 1;
