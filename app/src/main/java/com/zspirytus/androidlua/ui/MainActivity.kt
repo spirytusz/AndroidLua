@@ -28,14 +28,18 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 start_btn.setOnClickListener {
-                    val scriptPkg = File(Environment.getExternalStorageDirectory(), "script.zip")
-                    val config = "config"
-                    Log.d(TAG, "startScript: ${LuaExecutor.getInstance().runScriptPkg(scriptPkg, config)}" +
-                        " isScriptRunning: ${LuaExecutor.getInstance().isScriptRunning()}")
+                    if (!LuaExecutor.getInstance().isScriptRunning()) {
+                        val scriptPkg = File(Environment.getExternalStorageDirectory(), "script.zip")
+                        val config = "config"
+                        Log.d(TAG, "startScript: ${LuaExecutor.getInstance().runScriptPkg(scriptPkg, config)}" +
+                            " isScriptRunning: ${LuaExecutor.getInstance().isScriptRunning()}")
+                    }
                 }
                 stop_btn.setOnClickListener {
-                    Log.d(TAG, "stopScript: ${LuaExecutor.getInstance().stopScript()} " +
-                        "isScriptRunning: ${LuaExecutor.getInstance().isScriptRunning()}")
+                    if (LuaExecutor.getInstance().isScriptRunning()) {
+                        Log.d(TAG, "stopScript: ${LuaExecutor.getInstance().stopScript()} " +
+                            "isScriptRunning: ${LuaExecutor.getInstance().isScriptRunning()}")
+                    }
                 }
             }
         }
