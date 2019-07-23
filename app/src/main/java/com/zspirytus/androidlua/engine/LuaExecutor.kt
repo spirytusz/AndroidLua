@@ -22,9 +22,7 @@ class LuaExecutor {
     }
 
     fun runScriptPkg(scriptPkg: File, configFile: String) {
-        Log.d("LuaExecutor", "accept at Thread: ${Thread.currentThread().name}")
         mThreadPool?.execute {
-            Log.d("LuaExecutor", "execute unzip at Thread: ${Thread.currentThread().name}")
             val start = System.currentTimeMillis()
             initScriptPkg(scriptPkg)
             val zipFile = ZipFile(scriptPkg)
@@ -33,7 +31,6 @@ class LuaExecutor {
             val luaScript = ZipFileUtils.getFilesContentFromZipFile(zipFile, luaScriptPaths)
             Log.d("USE_TIME", "${System.currentTimeMillis() - start} ms")
             mHandler?.post {
-                Log.d("LuaExecutor", "callback at Thread: ${Thread.currentThread().name}")
                 startScript(luaScript)
             }
         }
