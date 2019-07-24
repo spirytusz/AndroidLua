@@ -23,6 +23,7 @@ add_library( # Sets the name of the library.
         src/main/jni/LuaEngine.cpp
         src/main/jni/LuaTask.cpp
         src/main/jni/JniManager.cpp
+        src/main/jni/utils/LuaUtils.cpp
 
         src/main/jni/lua/lapi.c
         src/main/jni/lua/lauxlib.c
