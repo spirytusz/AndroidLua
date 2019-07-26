@@ -13,6 +13,7 @@ LuaEngine::~LuaEngine() {
     if (isScriptRunning()) {
         stopScript();
     }
+    lua_close(mScriptContext);
     mScriptContext = nullptr;
 }
 
