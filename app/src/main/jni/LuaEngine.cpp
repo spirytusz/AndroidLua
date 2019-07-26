@@ -92,8 +92,8 @@ bool LuaEngine::runLuaFunction(const char *functionName) {
 }
 
 void quitLuaThread(lua_State *L) {
-    int mask = LUA_MASKCALL | LUA_MASKRET | LUA_MASKLINE | LUA_MASKCOUNT;
-    lua_sethook(L, &quitLuaThreadHooker, mask, 0);
+    int mask = LUA_MASKCOUNT;
+    lua_sethook(L, &quitLuaThreadHooker, mask, 1);
 }
 
 void quitLuaThreadHooker(lua_State *L, lua_Debug *ar) {
